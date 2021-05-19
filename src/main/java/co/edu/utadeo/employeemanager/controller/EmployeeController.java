@@ -44,8 +44,8 @@ public class EmployeeController {
 
   @PutMapping(path = "/update")
   public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
-    Employee updateemployee = employeeService.updateEmployee(employee);
-    return new ResponseEntity<>(updateemployee, HttpStatus.OK);
+    Employee updateEmployee = employeeService.updateEmployee(employee);
+    return new ResponseEntity<>(updateEmployee, HttpStatus.OK);
   }
 
   @DeleteMapping(path = "/delete/{id}")
