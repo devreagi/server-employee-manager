@@ -1,5 +1,6 @@
 package co.edu.utadeo.employeemanager.service;
 
+import co.edu.utadeo.employeemanager.exception.ImageUrlOutBoundsException;
 import co.edu.utadeo.employeemanager.exception.UserNotFoundException;
 import co.edu.utadeo.employeemanager.model.Employee;
 import co.edu.utadeo.employeemanager.repository.EmployeeRepository;
@@ -32,7 +33,11 @@ public class EmployeeService implements IEmployeeService {
 
   @Override
   public Employee updateEmployee(Employee employee) {
-    return employeeRepository.save(employee);
+    if (employee.getImageUrl().length() < 255) {
+      return employeeRepository.save(employee);
+    } else {
+      throw new ImageUrlOutBoundsException("Image URL it's too long");
+    }
   }
 
   @Override
