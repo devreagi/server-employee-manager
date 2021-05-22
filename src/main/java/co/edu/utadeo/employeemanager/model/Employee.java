@@ -6,6 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Employee implements Serializable {
@@ -14,10 +18,18 @@ public class Employee implements Serializable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false, updatable = false)
   private Long id;
+  @NotNull
+  @Size(min = 3)
   private String name;
+  @NotNull
+  @Email
   private String email;
+  @NotNull
   private String jobTitle;
+  @NotNull
+  @Positive
   private String phone;
+  @Size(max = 255)
   private String imageUrl;
   @Column(nullable = false, updatable = false)
   private String employeeCode;

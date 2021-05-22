@@ -13,10 +13,6 @@
   <artifactId>employeemanager</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>employeemanager</name>
-  <description>Demo project for Spring Boot</description>
-  <properties>
-    <java.version>16</java.version>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -37,7 +33,16 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <artifactId>validation-api</artifactId>
+      <groupId>javax.validation</groupId>
+    </dependency>
+
   </dependencies>
+  <properties>
+    <java.version>16</java.version>
+  </properties>
+  <description>Employee manager in Spring Boot</description>
 
   <build>
     <plugins>
