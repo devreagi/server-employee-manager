@@ -1,10 +1,17 @@
 package co.edu.utadeo.employeemanager.controller;
 
+import co.edu.utadeo.employeemanager.exception.ImageUrlOutBoundsException;
 import co.edu.utadeo.employeemanager.model.Employee;
 import co.edu.utadeo.employeemanager.service.EmployeeService;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000"})
@@ -33,19 +41,44 @@ public class EmployeeController {
   }
 
   @GetMapping(path = "/find/{id}")
-  public ResponseEntity<Employee> getEmployeeById(@PathVariable(value = "id") Long id) {
+  public ResponseEntity<?> getEmployeeById(@PathVariable(value = "id") Long id) {
     Employee employee = employeeService.findEmployeeByID(id);
+    Map<String, String> response = new HashMap<>();
+    if (employee == null) {
+      response.put("message", "User by ID " + id + " was not found");
+      return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
     return new ResponseEntity<>(employee, HttpStatus.OK);
   }
 
   @PostMapping(path = "/add")
-  public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
-    Employee employee1 = employeeService.addEmployee(employee);
-    return new ResponseEntity<>(employee1, HttpStatus.CREATED);
+  @ResponseStatus(HttpStatus.CREATED)
+  public ResponseEntity<?> addEmployee(@Valid @RequestBody Employee employee,
+      BindingResult result) {
+    Map<String, Object> response = new HashMap<>();
+    Employee newEmployee;
+    if (result.hasErrors()) {
+      List<String> error = new ArrayList<>();
+      for (FieldError err : result.getFieldErrors()) {
+        error.add("Field  " + err.getField() + " " + err.getDefaultMessage());
+      }
+      response.put("errors", error);
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    try {
+      newEmployee = employeeService.addEmployee(employee);
+    } catch (Exception e) {
+      response.put("errors", "Error al insertar");
+      return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<>(newEmployee, HttpStatus.OK);
   }
 
   @PutMapping(path = "/update")
   public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
+    if (employee.getImageUrl().length() > 200) {
+      throw new ImageUrlOutBoundsException("Image URL it's too long");
+    }
     Employee updateEmployee = employeeService.updateEmployee(employee);
     return new ResponseEntity<>(updateEmployee, HttpStatus.OK);
   }

@@ -7,9 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 @Entity
 public class Employee implements Serializable {
@@ -18,18 +19,21 @@ public class Employee implements Serializable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(nullable = false, updatable = false)
   private Long id;
-  @NotNull
-  @Size(min = 3)
+  @NotEmpty
+  @Size(min = 3, max = 20)
   private String name;
-  @NotNull
+  @NotEmpty
   @Email
   private String email;
-  @NotNull
+  @NotEmpty
   private String jobTitle;
-  @NotNull
+  @NotEmpty
   @Positive
+  @Size(min = 7, max = 15)
   private String phone;
   @Size(max = 255)
+  @NotEmpty
+  @URL
   private String imageUrl;
   @Column(nullable = false, updatable = false)
   private String employeeCode;
