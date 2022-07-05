@@ -1,9 +1,9 @@
 package co.edu.utadeo.employeemanager.exception;
 
 public class ImageUrlOutBoundsException extends
-    RuntimeException {
+        RuntimeException {
 
-  public ImageUrlOutBoundsException(String imageUrl) {
-    super(imageUrl);
-  }
+    public ImageUrlOutBoundsException(String imageUrl) {
+        super(imageUrl);
+    }
 }

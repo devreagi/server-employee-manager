@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  employee-api:
+    image: 'employee-api'
+    restart: always
+    build:
+      context: .
+    container_name: employee-server
+    depends_on:
+      - employee-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://employee-db:5432/employeemanager
+      - SPRING_DATASOURCE_USERNAME=devreagi
+      - SPRING_DATASOURCE_PASSWORD=dev2021
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - '2021:2021'
+
+  employee-db:
+    image: 'postgres:14-alpine'
+    restart: always
+    container_name: employee-db
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=devreagi
+      - POSTGRES_PASSWORD=dev2021
+      - POSTGRES_DB=employeemanager
+    ports:
+      - "5432:5432"
